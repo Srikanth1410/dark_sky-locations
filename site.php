@@ -67,5 +67,87 @@ require_once 'includes/header.php';
 </dl>
 
 <!-- Students: Add a JOIN to display related observations here as an intermediate enhancement. -->
+<!-- <?php require_once 'includes/footer.php'; ?> -->
 
-<?php require_once 'includes/footer.php'; ?>
+<?php
+// Retrieve observations associated with this site.
+// LEFT JOIN allows the site to appear even when it has no observations.
+$observationStmt = $pdo->prepare('
+    SELECT
+        o.object_name,
+        o.object_type,
+        o.observation_date,
+        o.notes
+    FROM sites AS s
+    LEFT JOIN observations AS o
+        ON s.id = o.site_id
+    WHERE s.id = ?
+    ORDER BY o.observation_date DESC
+');
+
+$observationStmt->execute([$siteId]);
+$observations = $observationStmt->fetchAll();
+
+// Remove the empty observation row returned by LEFT JOIN
+// when a site has no related observations.
+$observations = array_filter(
+    $observations,
+    fn($observation) => $observation['object_name'] !== null
+);
+?>
+
+<section class="observations">
+    <h2>Astronomical Observations</h2>
+
+    <p>
+        Explore the celestial objects associated with
+        <?php echo e($site['name']); ?>.
+    </p>
+
+    <?php if (empty($observations)): ?>
+        <p>No observations are currently available for this site.</p>
+    <?php else: ?>
+        <p>
+            Total observations: <?php echo count($observations); ?>
+        </p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Object Name</th>
+                        <th>Object Type</th>
+                        <th>Observation Date</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php foreach ($observations as $observation): ?>
+                        <tr>
+                            <td>
+                                <?php echo e($observation['object_name']); ?>
+                            </td>
+
+                            <td>
+                                <?php echo e($observation['object_type']); ?>
+                            </td>
+
+                            <td>
+                                <?php
+                                echo e(
+                                    $observation['observation_date']
+                                );
+                                ?>
+                            </td>
+
+                            <td>
+                                <?php echo e($observation['notes']); ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+</section>
