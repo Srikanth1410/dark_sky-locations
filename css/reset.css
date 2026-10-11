@@ -8,3 +8,217 @@
     margin: 0;
     padding: 0;
 }
+/* Dark Sky Reserves - main stylesheet */
+
+:root {
+    --bg: #07111f;
+    --surface: #101f33;
+    --surface-light: #172b43;
+    --text: #edf4ff;
+    --muted: #afc0d6;
+    --accent: #8bd3ff;
+    --border: #2a405a;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+header {
+    padding: 24px 5%;
+    background: #0b192b;
+    border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 12px;
+    color: var(--accent);
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+a {
+    color: var(--accent);
+}
+
+a:hover {
+    color: #ffffff;
+}
+
+main {
+    width: min(1200px, 92%);
+    margin: 32px auto;
+}
+
+h2 {
+    font-size: 1.7rem;
+    margin-bottom: 8px;
+}
+
+p {
+    color: var(--muted);
+    margin-bottom: 18px;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 14px;
+    padding: 20px;
+    margin: 24px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1 1 180px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+input,
+select,
+button {
+    font: inherit;
+    padding: 10px 12px;
+    border-radius: 7px;
+}
+
+input,
+select {
+    width: 100%;
+    color: var(--text);
+    background: #091727;
+    border: 1px solid #49617c;
+}
+
+button {
+    cursor: pointer;
+    color: #07111f;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    font-weight: bold;
+}
+
+button:hover {
+    background: #c3eaff;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 3px solid #ffd166;
+    outline-offset: 3px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+th,
+td {
+    padding: 13px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background: var(--surface-light);
+    color: var(--accent);
+}
+
+tbody tr:hover {
+    background: var(--surface-light);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.site-details,
+.observations {
+    margin-top: 24px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+dl {
+    display: grid;
+    grid-template-columns: minmax(150px, 220px) 1fr;
+    gap: 12px;
+}
+
+dt {
+    color: var(--muted);
+    font-weight: bold;
+}
+
+dd {
+    overflow-wrap: anywhere;
+}
+
+footer {
+    padding: 24px 5%;
+    text-align: center;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+}
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 1.6rem;
+    }
+
+    main {
+        width: 94%;
+        margin: 22px auto;
+    }
+
+    form {
+        padding: 14px;
+    }
+
+    dl {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    dd {
+        margin-bottom: 12px;
+    }
+
+    th,
+    td {
+        padding: 10px;
+    }
+}
