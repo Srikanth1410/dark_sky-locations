@@ -1,9 +1,7 @@
+
 <?php
 /**
  * Dark Sky Reserves - site detail page.
- *
- * Displays one site from the sites table. Students should add the related
- * observations display as an intermediate enhancement.
  */
 
 require_once 'includes/db.php';
@@ -29,6 +27,7 @@ $stmt = $pdo->prepare('
     FROM sites
     WHERE id = ?
 ');
+
 $stmt->execute([$siteId]);
 $site = $stmt->fetch();
 
@@ -37,82 +36,85 @@ if (!$site) {
     exit;
 }
 
-$pageTitle = $site['name'];
-
-require_once 'includes/header.php';
-?>
-
-<p><a href="index.php">&larr; Back to all sites</a></p>
-
-<h2><?php echo e($site['name']); ?></h2>
-
-<dl>
-    <dt>Country</dt>
-    <dd><?php echo e($site['country']); ?></dd>
-
-    <dt>Site Type</dt>
-    <dd><?php echo e($site['site_type']); ?></dd>
-
-    <dt>Designation Year</dt>
-    <dd><?php echo e($site['designation_year']); ?></dd>
-
-    <dt>Sky Quality Index</dt>
-    <dd><?php echo $site['sky_quality_index'] !== null ? e($site['sky_quality_index']) : 'Not recorded'; ?></dd>
-
-    <dt>Latitude</dt>
-    <dd><?php echo e($site['lat']); ?></dd>
-
-    <dt>Longitude</dt>
-    <dd><?php echo e($site['lng']); ?></dd>
-</dl>
-
-<!-- Students: Add a JOIN to display related observations here as an intermediate enhancement. -->
-<!-- <?php require_once 'includes/footer.php'; ?> -->
-
-<?php
-// Retrieve observations associated with this site.
-// LEFT JOIN allows the site to appear even when it has no observations.
+// Retrieve observations for this site.
 $observationStmt = $pdo->prepare('
     SELECT
-        o.object_name,
-        o.object_type,
-        o.observation_date,
-        o.notes
-    FROM sites AS s
-    LEFT JOIN observations AS o
-        ON s.id = o.site_id
-    WHERE s.id = ?
-    ORDER BY o.observation_date DESC
+        object_name,
+        object_type,
+        observation_date,
+        notes
+    FROM observations
+    WHERE site_id = ?
+    ORDER BY observation_date DESC
 ');
 
 $observationStmt->execute([$siteId]);
-$observations = $observationStmt->fetchAll();
+$observations = $observationStmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Remove the empty observation row returned by LEFT JOIN
-// when a site has no related observations.
-$observations = array_filter(
-    $observations,
-    fn($observation) => $observation['object_name'] !== null
-);
+$pageTitle = $site['name'];
+require_once 'includes/header.php';
 ?>
 
-<section class="observations">
-    <h2>Astronomical Observations</h2>
+<main class="site-detail">
 
     <p>
-        Explore the celestial objects associated with
-        <?php echo e($site['name']); ?>.
+        <a href="index.php">&larr; Back to all sites</a>
     </p>
 
-    <?php if (empty($observations)): ?>
-        <p>No observations are currently available for this site.</p>
-    <?php else: ?>
+    <h2><?php echo e($site['name']); ?></h2>
+
+    <dl>
+        <dt>Country</dt>
+        <dd><?php echo e($site['country']); ?></dd>
+
+        <dt>Site Type</dt>
+        <dd><?php echo e($site['site_type']); ?></dd>
+
+        <dt>Designation Year</dt>
+        <dd><?php echo e($site['designation_year']); ?></dd>
+
+        <dt>Sky Quality Index</dt>
+        <dd>
+            <?php
+            echo $site['sky_quality_index'] !== null
+                ? e($site['sky_quality_index'])
+                : 'Not recorded';
+            ?>
+        </dd>
+
+        <dt>Latitude</dt>
+        <dd><?php echo e($site['lat']); ?></dd>
+
+        <dt>Longitude</dt>
+        <dd><?php echo e($site['lng']); ?></dd>
+    </dl>
+
+    <section class="observations">
+        <h2>Astronomical Observations</h2>
+
+        <p>
+            Explore the celestial objects associated with
+            <?php echo e($site['name']); ?>.
+        </p>
+
         <p>
             Total observations: <?php echo count($observations); ?>
         </p>
 
-        <div class="table-wrapper">
-            <table>
+        <?php if (empty($observations)): ?>
+
+            <p>No observations are currently available for this site.</p>
+
+        <?php else: ?>      
+        <div class="table-wrapper observations-table-wrapper">
+            <table class="observations-table">
+                <colgroup>
+                    <col class="col-object">
+                    <col class="col-type">
+                    <col class="col-date">
+                    <col class="col-notes">
+                </colgroup>
+
                 <thead>
                     <tr>
                         <th>Object Name</th>
@@ -134,20 +136,20 @@ $observations = array_filter(
                             </td>
 
                             <td>
-                                <?php
-                                echo e(
-                                    $observation['observation_date']
-                                );
-                                ?>
+                                <?php echo e($observation['observation_date']); ?>
                             </td>
 
-                            <td>
-                                <?php echo e($observation['notes']); ?>
+                            <td class="observation-notes">
+                                <?php echo e($observation['notes'] ?? 'No notes available'); ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
-    <?php endif; ?>
-</section>
+        <?php endif; ?>
+    </section>
+
+</main>
+
+<?php require_once 'includes/footer.php'; ?>

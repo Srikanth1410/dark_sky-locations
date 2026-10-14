@@ -1,14 +1,19 @@
 /**
- * Minimal CSS reset.
- * Students: Create your own stylesheet for visual styling.
+ * Dark Sky Reserves - main stylesheet.
+ * Minimal CSS reset + full visual styling.
  */
 
-*, *::before, *::after {
+/* ===== Box Sizing Reset ===== */
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
-/* Dark Sky Reserves - main stylesheet */
+
+/* ===== Design Tokens ===== */
 
 :root {
     --bg: #07111f;
@@ -20,16 +25,40 @@
     --border: #2a405a;
 }
 
+/* ===== Base Elements ===== */
+
+html {
+    min-height: 100%;
+    background-color: #06101f;
+}
+
 body {
     min-height: 100vh;
-    background: var(--bg);
-    color: var(--text);
+    margin: 0;
+    padding-top: 100px;
+    /* offset for fixed header */
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     line-height: 1.6;
+    color: #f1f5f9;
+
+    background-color: #06101f;
+    background-image:
+        linear-gradient(rgba(4, 12, 25, 0.55),
+            rgba(4, 12, 25, 0.72)),
+        url("../images/dark-sky-map.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
     padding: 24px 5%;
     background: #0b192b;
     border-bottom: 1px solid var(--border);
@@ -58,6 +87,7 @@ a:hover {
 main {
     width: min(1200px, 92%);
     margin: 32px auto;
+    position: relative;
 }
 
 h2 {
@@ -69,6 +99,15 @@ p {
     color: var(--muted);
     margin-bottom: 18px;
 }
+
+footer {
+    padding: 24px 5%;
+    text-align: center;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+}
+
+/* ===== Forms ===== */
 
 form {
     display: flex;
@@ -130,47 +169,7 @@ select:focus-visible {
     outline-offset: 3px;
 }
 
-.table-wrapper {
-    overflow-x: auto;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    white-space: nowrap;
-}
-
-th,
-td {
-    padding: 13px 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-}
-
-th {
-    background: var(--surface-light);
-    color: var(--accent);
-}
-
-tbody tr:hover {
-    background: var(--surface-light);
-}
-
-tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.site-details,
-.observations {
-    margin-top: 24px;
-    padding: 24px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-}
+/* ===== Definition List ===== */
 
 dl {
     display: grid;
@@ -187,27 +186,334 @@ dd {
     overflow-wrap: anywhere;
 }
 
-footer {
-    padding: 24px 5%;
-    text-align: center;
-    color: var(--muted);
-    border-top: 1px solid var(--border);
+/* ===== Section Panels ===== */
+
+.site-details,
+.observations {
+    margin-top: 24px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
 }
 
-@media (max-width: 600px) {
-    header h1 {
-        font-size: 1.6rem;
+/* ===== Tables ===== */
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+thead th {
+    background-color: #1b3049;
+    color: #8fd3ff;
+    padding: 18px;
+    text-align: left;
+    border-bottom: 1px solid #344b65;
+}
+
+th,
+td {
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+tbody tr:nth-child(odd) {
+    background-color: rgba(15, 31, 51, 0.96);
+}
+
+tbody tr:nth-child(even) {
+    background-color: rgba(39, 62, 88, 0.96);
+}
+
+tbody td {
+    padding: 18px;
+    color: #f1f5f9;
+    border-bottom: 1px solid rgba(143, 211, 255, 0.15);
+    vertical-align: middle;
+}
+
+tbody tr:hover {
+    background-color: #304d6b;
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+table a {
+    color: #8fd3ff;
+    font-weight: 600;
+}
+
+table a:hover {
+    color: #ffffff;
+}
+
+/* ===== Table Wrapper ===== */
+
+.table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.table-wrapper table {
+    width: 100%;
+    font-size: 15px;
+    white-space: normal;
+}
+
+.table-wrapper thead th {
+    padding: 12px 14px;
+    line-height: 1.35;
+}
+
+.table-wrapper tbody td {
+    padding: 10px 14px;
+    line-height: 1.4;
+}
+
+.table-wrapper tbody tr {
+    height: auto;
+}
+
+/* Keep site names readable */
+.table-wrapper th:first-child,
+.table-wrapper td:first-child {
+    min-width: 220px;
+}
+
+/* Keep action links on one line (not for observations — Notes is the last column there) */
+.table-wrapper:not(.observations .table-wrapper) th:last-child,
+.table-wrapper:not(.observations .table-wrapper) td:last-child,
+.observations+.table-wrapper th:last-child,
+.observations+.table-wrapper td:last-child {
+    white-space: nowrap;
+    width: 100px;
+    min-width: 100px;
+}
+
+/* Simpler targeted rule: apply last-child nowrap only on index/map tables */
+.table-wrapper th:last-child,
+.table-wrapper td:last-child {
+    white-space: nowrap;
+    width: 100px;
+    min-width: 100px;
+}
+
+.table-wrapper td:last-child a {
+    white-space: nowrap;
+    display: inline-block;
+}
+
+/* Keep coordinates and short values together (index table columns 4/6/7 only) */
+.table-wrapper th:nth-child(6),
+.table-wrapper td:nth-child(6),
+.table-wrapper th:nth-child(7),
+.table-wrapper td:nth-child(7) {
+    white-space: nowrap;
+}
+
+/* ===== Astronomical Observations Table ===== */
+
+.observations .table-wrapper {
+    overflow-x: visible;
+    width: 100%;
+    max-width: 100%;
+}
+
+.observations .table-wrapper table {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    font-size: 14px;
+}
+
+.observations .table-wrapper th,
+.observations .table-wrapper td {
+    padding: 10px 12px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    line-height: 1.5;
+    vertical-align: top;
+}
+
+.observations .table-wrapper th:nth-child(1),
+.observations .table-wrapper td:nth-child(1) {
+    width: 18%;
+}
+
+.observations .table-wrapper th:nth-child(2),
+.observations .table-wrapper td:nth-child(2) {
+    width: 14%;
+}
+
+.observations .table-wrapper th:nth-child(3),
+.observations .table-wrapper td:nth-child(3) {
+    width: 18%;
+}
+
+/* Notes column — must wrap, never truncate */
+.observations .table-wrapper th:nth-child(4),
+.observations .table-wrapper td:nth-child(4),
+.observations .table-wrapper th:last-child,
+.observations .table-wrapper td:last-child {
+    width: 50%;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    min-width: 0;
+    max-width: none;
+}
+
+/* ===== Images ===== */
+
+figure img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* ===== Toast Notification ===== */
+
+.toast-notification {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    max-width: calc(100vw - 32px);
+    padding: 16px 20px;
+
+    background: #dcfce7;
+    color: #14532d;
+    border: 1px solid #86efac;
+    border-radius: 12px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    font-weight: 600;
+
+    animation: toast-appear 0.3s ease-out;
+}
+
+.toast-notification.toast-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #fca5a5;
+}
+
+.toast-notification.hide {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+@keyframes toast-appear {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Responsive: 768px ===== */
+
+@media (max-width: 768px) {
+    body {
+        background-attachment: scroll;
+        padding-top: 82px;
+        /* smaller header on mobile */
     }
 
     main {
         width: 94%;
-        margin: 22px auto;
+        margin: 20px auto;
+    }
+
+    header {
+        padding: 18px 4%;
+    }
+
+    header h1 {
+        font-size: 1.6rem;
     }
 
     form {
-        padding: 14px;
+        align-items: stretch;
     }
 
+    .form-field {
+        flex-basis: 100%;
+    }
+
+    .table-wrapper table {
+        min-width: 850px;
+    }
+
+    .table-wrapper thead th,
+    .table-wrapper tbody td {
+        padding: 9px 10px;
+        font-size: 14px;
+    }
+
+    .site-details,
+    .observations {
+        padding: 16px;
+    }
+
+    .observations .table-wrapper table {
+        min-width: 0;
+        font-size: 13px;
+    }
+
+    .observations .table-wrapper th,
+    .observations .table-wrapper td {
+        padding: 8px 6px;
+    }
+
+    .observations .table-wrapper th:nth-child(1),
+    .observations .table-wrapper td:nth-child(1) {
+        width: 22%;
+    }
+
+    .observations .table-wrapper th:nth-child(2),
+    .observations .table-wrapper td:nth-child(2) {
+        width: 16%;
+    }
+
+    .observations .table-wrapper th:nth-child(3),
+    .observations .table-wrapper td:nth-child(3) {
+        width: 23%;
+    }
+
+    .observations .table-wrapper th:nth-child(4),
+    .observations .table-wrapper td:nth-child(4) {
+        width: 39%;
+    }
+}
+
+/* ===== Responsive: 600px ===== */
+
+@media (max-width: 600px) {
     dl {
         grid-template-columns: 1fr;
         gap: 4px;
@@ -220,5 +526,178 @@ footer {
     th,
     td {
         padding: 10px;
+    }
+
+    form {
+        padding: 14px;
+    }
+
+    .toast-notification {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+    }
+}
+
+/* ===== Fixed Header on Every Page ===== */
+
+header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 99999;
+
+    background: #0b1a2c;
+    border-bottom: 1px solid #2a405a;
+}
+
+/* Keep header content above the page */
+header h1 {
+    margin-top: 0;
+}
+
+header nav {
+    position: relative;
+    z-index: 100000;
+}
+
+/* Reserve space so content does not hide behind the header */
+body {
+    padding-top: 145px;
+}
+
+
+/* Fixed header */
+.site-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100%;
+    min-height: 120px;
+    box-sizing: border-box;
+    padding: 18px 30px;
+
+    background: #0b1a2c;
+    border-bottom: 1px solid #2a405a;
+    z-index: 99999;
+}
+
+/* Header title */
+.site-header h1 {
+    margin: 0 0 14px;
+}
+
+/* Navigation */
+.site-header nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Content starts below the fixed header */
+body {
+    padding-top: 145px !important;
+}
+
+/* ===== FINAL OBSERVATIONS TABLE FIX ===== */
+
+.site-detail .observations {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Keep table inside the observations panel */
+.site-detail .observations .table-wrapper {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
+}
+
+/* Force the table to use available width */
+.site-detail .observations table {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse;
+}
+
+/* Allow all observation cells to wrap */
+.site-detail .observations table th,
+.site-detail .observations table td {
+    box-sizing: border-box;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    vertical-align: top;
+    padding: 12px;
+    line-height: 1.5;
+}
+
+/* ===== Observation table: prevent notes clipping ===== */
+
+.observations-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible !important;
+    box-sizing: border-box;
+}
+
+table.observations-table {
+    display: table !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed !important;
+    border-collapse: collapse;
+}
+
+/* Override inherited no-wrap and fixed-height rules */
+table.observations-table th,
+table.observations-table td {
+    height: auto !important;
+    max-height: none !important;
+    padding: 10px 12px;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    line-height: 1.5;
+    vertical-align: top;
+    box-sizing: border-box;
+}
+
+/* Define column proportions */
+table.observations-table .col-object {
+    width: 18%;
+}
+
+table.observations-table .col-type {
+    width: 14%;
+}
+
+table.observations-table .col-date {
+    width: 20%;
+}
+
+table.observations-table .col-notes {
+    width: 48%;
+}
+
+@media (max-width: 768px) {
+    table.observations-table th,
+    table.observations-table td {
+        padding: 8px 6px;
+        font-size: 12px;
     }
 }

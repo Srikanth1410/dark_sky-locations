@@ -9,11 +9,13 @@
     <!-- Students: Add your CSS stylesheet link here. -->
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <h1>Dark Sky Reserves</h1>
         <nav>
             <a href="index.php">All Sites</a>
+            <a href="map.php">Site Map</a>
+            <a href="contact.php">Contact Us</a>
             <!-- Students: Add more navigation links here. -->
         </nav>
     </header>
-    <main>
+<main>
