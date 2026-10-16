@@ -52,8 +52,28 @@ $observationStmt->execute([$siteId]);
 $observations = $observationStmt->fetchAll(PDO::FETCH_ASSOC);
 
 $pageTitle = $site['name'];
+
+$mapLat = is_numeric($site['lat']) ? (float) $site['lat'] : null;
+$mapLng = is_numeric($site['lng']) ? (float) $site['lng'] : null;
+
+$hasValidCoordinates =
+    $mapLat !== null &&
+    $mapLng !== null &&
+    $mapLat >= -90 && $mapLat <= 90 &&
+    $mapLng >= -180 && $mapLng <= 180;
+
+$mapSiteName = json_encode(
+    $site['name'],
+    JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP
+);
+
 require_once 'includes/header.php';
 ?>
+
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+>
 
 <main class="site-detail">
 
@@ -88,6 +108,70 @@ require_once 'includes/header.php';
         <dt>Longitude</dt>
         <dd><?php echo e($site['lng']); ?></dd>
     </dl>
+
+    <section class="site-location">
+        <h2>Site Location</h2>
+
+        <p>
+            Explore the geographical location of
+            <?php echo e($site['name']); ?>.
+        </p>
+
+        <?php if ($hasValidCoordinates): ?>
+            <div
+                id="site-location-map"
+                role="region"
+                aria-label="Map showing the location of <?php echo e($site['name']); ?>"
+            ></div>
+
+            <p class="map-note">
+                Coordinates:
+                <?php echo e($site['lat']); ?>,
+                <?php echo e($site['lng']); ?>
+            </p>
+
+        <?php else: ?>
+            <p>Map unavailable because valid coordinates have not been recorded.</p>
+        <?php endif; ?>
+    </section>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <?php if ($hasValidCoordinates): ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const latitude = <?php echo json_encode($mapLat); ?>;
+        const longitude = <?php echo json_encode($mapLng); ?>;
+        const siteName = <?php echo $mapSiteName ?: '""'; ?>;
+
+        const locationMap = L.map('site-location-map', {
+            scrollWheelZoom: false
+        }).setView([latitude, longitude], 8);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            noWrap: true,
+            attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright">' +
+                'OpenStreetMap contributors</a>'
+        }).addTo(locationMap);
+
+        const marker = L.marker([latitude, longitude]).addTo(locationMap);
+
+        const popup = document.createElement('div');
+        const title = document.createElement('strong');
+        title.textContent = siteName;
+        popup.appendChild(title);
+
+        const coordinates = document.createElement('p');
+        coordinates.textContent =
+            'Coordinates: ' + latitude + ', ' + longitude;
+        popup.appendChild(coordinates);
+
+        marker.bindPopup(popup).openPopup();
+    });
+    </script>
+    <?php endif; ?>
 
     <section class="observations">
         <h2>Astronomical Observations</h2>

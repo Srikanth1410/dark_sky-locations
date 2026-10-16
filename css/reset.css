@@ -701,3 +701,42 @@ table.observations-table .col-notes {
         font-size: 12px;
     }
 }
+
+/* ===== Map on the Site Details Page ===== */
+
+.site-location {
+    margin: 24px 0;
+    padding: 24px;
+    background: #102035;
+    border: 1px solid #2a405a;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+.site-location h2 {
+    margin-top: 0;
+}
+
+#site-location-map {
+    width: 100%;
+    height: 380px;
+    border-radius: 10px;
+    border: 1px solid #2a405a;
+    z-index: 1;
+}
+
+.site-location .map-note {
+    margin-bottom: 0;
+    font-size: 14px;
+    color: #b9cce0;
+}
+
+@media (max-width: 768px) {
+    .site-location {
+        padding: 14px;
+    }
+
+    #site-location-map {
+        height: 300px;
+    }
+}
